@@ -19,7 +19,6 @@ int main(){
 	}
 	else { 
 		struct database* currNode = firstNode->next;
-		printf("%s\n", currNode->tconst);
 
 		for(int i = 0; i < 1; i++)
 		{

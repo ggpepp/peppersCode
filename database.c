@@ -46,8 +46,10 @@ int createDatabase(const char *filename, struct database *firstNode)
 	struct database* currNode = firstNode;
 	for(int i = 0; i < size-1; i++)
 	{
-
 		if (storage[i] == '\n') {
+			currNode->genres = (char*)malloc(strlen(currString) + 1);
+			strcpy(currNode->genres,currString);
+			//printDatabase(currNode);
 			struct database* new = malloc(sizeof(struct database*));
 			currNode->next = new;
 			currNode = currNode->next;
@@ -56,59 +58,63 @@ int createDatabase(const char *filename, struct database *firstNode)
 			stringIterator = 0;
 			currString[0] = '\0';
 		}
-		else if((int)storage[i] == 9)
+		else if(storage[i] == '\t')
 		{
 
 			stringLength = strlen(currString);
-			switch (currentState)
+
+			if(currentState == 0)
 			{
-				case 0:
-					currNode->tconst = (char*)malloc(stringLength + 1);
-					currNode->tconst = currString;
-					break;
+				currNode->tconst = (char*)malloc(stringLength + 1);
+				strncpy(currNode->tconst,currString,stringLength-1);
+			}
 
-				case 1:
-					currNode->titleType = (char*)malloc(stringLength + 1);
-					currNode->titleType = currString;
-					break;
-			
-				case 2:
-					currNode->primaryTitle = (char*)malloc(stringLength + 1);
-					currNode->primaryTitle = currString;
-					printf("%s\n", currNode->primaryTitle);
-					break;
+			else if(currentState == 1)
+			{
+				currNode->titleType = (char*)malloc(stringLength + 1);
+				strcpy(currNode->titleType,currString);
+			}
+		
+			else if(currentState == 2)
+			{
+				currNode->primaryTitle = (char*)malloc(stringLength + 1);
+				strcpy(currNode->primaryTitle,currString);
+			}
 
-				case 3:
-					currNode->originalTitle = (char*)malloc(stringLength + 1);
-					currNode->originalTitle = currString;
-					break;
+			else if(currentState == 3)
+			{
+				currNode->originalTitle = (char*)malloc(stringLength + 1);
+				strcpy(currNode->originalTitle,currString);
+			printf("%s\n", currNode->tconst);
+			}
 
-				case 4:
-					currNode->isAdult = (char*)malloc(stringLength + 1);
-					currNode->isAdult = currString;
-					break;
+			else if(currentState == 4)
+			{
+				currNode->isAdult = (char*)malloc(stringLength + 1);
+				strcpy(currNode->isAdult,currString);
+			}
 
-				case 5:
-					currNode->startYear = (char*)malloc(stringLength + 1);
-					currNode->startYear = currString;
-					break;
+			else if(currentState == 5)
+			{
+				currNode->startYear = (char*)malloc(stringLength + 1);
+				strcpy(currNode->startYear,currString);
+			}
 
-				case 6:
-					currNode->endYear = (char*)malloc(stringLength + 1);
-					currNode->endYear = currString;
-					break;
+			else if(currentState == 6)
+			{
+				currNode->endYear = (char*)malloc(stringLength + 1);
+				strcpy(currNode->endYear,currString);
+			}
 
-				case 7:
-					currNode->runtimeMinutes = (char*)malloc(stringLength + 1);
-					currNode->runtimeMinutes = currString;
-					break;
+			else if(currentState == 7)
+			{
+				currNode->runtimeMinutes = (char*)malloc(stringLength + 1);
+				strcpy(currNode->runtimeMinutes,currString);
+			}
 
-				case 8:
-					currNode->genres = (char*)malloc(stringLength + 1);
-					currNode->genres = currString;
-				default:
-					printf("Broken Code");
-					break;
+			else
+			{
+				printf("Broken Code");
 			}
 			currentState++;
 			stringIterator = 0;
