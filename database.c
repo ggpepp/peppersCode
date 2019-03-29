@@ -5,14 +5,15 @@
 
 void printDatabase(struct database* currNode)
 {
-	printf("%s ",currNode->titleId);
-	printf("%s ",currNode->ordering);
-	printf("%s ",currNode->title);
-	printf("%s ",currNode->region);
-	printf("%s ",currNode->language);
-	printf("%s ",currNode->types);
-	printf("%s ",currNode->attributes);
-	printf("%s\n",currNode->isOriginalTitle);
+	printf("%s ",currNode->tconst);
+	printf("%s ",currNode->titleType);
+	printf("%s ",currNode->primaryTitle);
+	printf("%s ",currNode->originalTitle);
+	printf("%s ",currNode->isAdult);
+	printf("%s ",currNode->startYear);
+	printf("%s ",currNode->endYear);
+	printf("%s ",currNode->runtimeMinutes);
+	printf("%s\n",currNode->genres);
 
 }
 
@@ -43,7 +44,7 @@ int createDatabase(const char *filename, struct database *firstNode)
 	int stringLength = 0;
 	int stringIterator = 0;
 	struct database* currNode = firstNode;
-	for(int i = 0; i < 100; i++)
+	for(int i = 0; i < size; i++)
 	{
 
 		if (storage[i] == '\n') {
@@ -56,52 +57,56 @@ int createDatabase(const char *filename, struct database *firstNode)
 		}
 		else if((int)storage[i] == 9)
 		{
+
 			printf("%s\n", currString);
 			stringLength = strlen(currString);
 			switch (currentState)
 			{
 				case 0:
-					currNode->titleId = (char*)malloc(stringLength + 1);
-					currNode->titleId = currString;
+					currNode->tconst = (char*)malloc(stringLength + 1);
+					currNode->tconst = currString;
 					break;
 
 				case 1:
-					currNode->ordering = (char*)malloc(stringLength + 1);
-					currNode->ordering = currString;
+					currNode->titleType = (char*)malloc(stringLength + 1);
+					currNode->titleType = currString;
 					break;
 			
 				case 2:
-					currNode->title = (char*)malloc(stringLength + 1);
-					currNode->title = currString;
+					currNode->primaryTitle = (char*)malloc(stringLength + 1);
+					currNode->primaryTitle = currString;
 					break;
 
 				case 3:
-					currNode->region = (char*)malloc(stringLength + 1);
-					currNode->region = currString;
+					currNode->originalTitle = (char*)malloc(stringLength + 1);
+					currNode->originalTitle = currString;
 					break;
 
 				case 4:
-					currNode->language = (char*)malloc(stringLength + 1);
-					currNode->language = currString;
+					currNode->isAdult = (char*)malloc(stringLength + 1);
+					currNode->isAdult = currString;
 					break;
 
 				case 5:
-					currNode->types = (char*)malloc(stringLength + 1);
-					currNode->types = currString;
+					currNode->startYear = (char*)malloc(stringLength + 1);
+					currNode->startYear = currString;
 					break;
 
 				case 6:
-					currNode->attributes = (char*)malloc(stringLength + 1);
-					currNode->attributes = currString;
+					currNode->endYear = (char*)malloc(stringLength + 1);
+					currNode->endYear = currString;
 					break;
 
 				case 7:
-					currNode->isOriginalTitle = (char*)malloc(stringLength + 1);
-					currNode->isOriginalTitle = currString;
+					currNode->runtimeMinutes = (char*)malloc(stringLength + 1);
+					currNode->runtimeMinutes = currString;
 					break;
 
+				case 8:
+					currNode->genres = (char*)malloc(stringLength + 1);
+					currNode->genres = currString;
 				default:
-					//printf("Broken Code");
+					printf("Broken Code");
 					break;
 			}
 			currentState++;
@@ -110,6 +115,7 @@ int createDatabase(const char *filename, struct database *firstNode)
 		else
 		{
 			currString[stringIterator] = storage[i];
+			currString[stringIterator + 1] = '\0';
 			stringIterator++;
 		}
 		

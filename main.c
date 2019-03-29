@@ -1,15 +1,17 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include "database.h"
- 
-int main(void){	
+
+
+int main(int argc, char const *argv[]){	
 
 	struct database *firstNode = malloc(sizeof(struct database*));
 	int lines = 0;
-	lines = createDatabase("data.tsv", firstNode);
+	printf("%s\n", argv[1]);
+	lines = createDatabase(argv[1], firstNode);
 	if (lines < 0) 
 	{ 
-		puts("Data file is not present.\nMake sure that the \"data.tsv\" file is present and restart the program.\n");
+		printf("Data file is not present.\nMake sure that the \"data.tsv\" file is present and restart the program.\n");
 		return 1;
 	}
 	else { 

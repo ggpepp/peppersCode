@@ -1,1 +1,0 @@
-int load_to_memory(const char *filename, char **result);
