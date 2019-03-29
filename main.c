@@ -3,20 +3,23 @@
 #include "database.h"
 
 
-int main(int argc, char const *argv[]){	
+int main(){	
 
 	struct database *firstNode = malloc(sizeof(struct database*));
 	int lines = 0;
-	printf("%s\n", argv[1]);
-	lines = createDatabase(argv[1], firstNode);
+	lines = createDatabase("data.tsv", firstNode);
+	if (firstNode->next == NULL) {
+		printf("Broken");
+	}
+	
 	if (lines < 0) 
 	{ 
 		printf("Data file is not present.\nMake sure that the \"data.tsv\" file is present and restart the program.\n");
 		return 1;
 	}
 	else { 
-		printf("%d\n", lines);
-		struct database* currNode = malloc(sizeof(struct database*));
+		struct database* currNode = firstNode->next;
+		printf("%s\n", currNode->tconst);
 
 		for(int i = 0; i < 1; i++)
 		{

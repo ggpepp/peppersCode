@@ -39,12 +39,12 @@ int createDatabase(const char *filename, struct database *firstNode)
 		return -2; // -2 means file reading fail 
 	}
 	fclose(f);
-	char currString[100];
+	char currString[250];
 	int currentState = 0;
 	int stringLength = 0;
 	int stringIterator = 0;
 	struct database* currNode = firstNode;
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < size-1; i++)
 	{
 
 		if (storage[i] == '\n') {
@@ -54,11 +54,11 @@ int createDatabase(const char *filename, struct database *firstNode)
 			currentState = 0;
 			lines++;
 			stringIterator = 0;
+			currString[0] = '\0';
 		}
 		else if((int)storage[i] == 9)
 		{
 
-			printf("%s\n", currString);
 			stringLength = strlen(currString);
 			switch (currentState)
 			{
@@ -75,6 +75,7 @@ int createDatabase(const char *filename, struct database *firstNode)
 				case 2:
 					currNode->primaryTitle = (char*)malloc(stringLength + 1);
 					currNode->primaryTitle = currString;
+					printf("%s\n", currNode->primaryTitle);
 					break;
 
 				case 3:
@@ -120,7 +121,6 @@ int createDatabase(const char *filename, struct database *firstNode)
 		}
 		
 	}
-
 	
 	return lines;
 }
