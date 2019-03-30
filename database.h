@@ -1,3 +1,6 @@
+#ifndef database_h
+#define database_h
+
 struct database
 {
 	char* tconst;
@@ -9,8 +12,13 @@ struct database
 	char* endYear;
 	char* runtimeMinutes;
 	char* genres;
-	struct database* next;
+	DATABASE* next;
 
 };
-void printDatabase(struct database* firstNode);
-int createDatabase(const char *filename, struct database *firstNode);
+
+typedef struct database DATABASE;
+
+void printDatabase(DATABASE* firstNode);
+int createDatabase(const char *filename, DATABASE* firstNode);
+
+#endif

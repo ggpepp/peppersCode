@@ -4,7 +4,6 @@
 
 
 int main(){	
-
 	struct database *firstNode = malloc(sizeof(struct database*));
 	int lines = 0;
 	lines = createDatabase("data.tsv", firstNode);
@@ -17,13 +16,14 @@ int main(){
 		printf("Data file is not present.\nMake sure that the \"data.tsv\" file is present and restart the program.\n");
 		return 1;
 	}
-	else { 
+	else {
 		struct database* currNode = firstNode->next;
+		printDatabase(currNode);
 
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < lines-2; i++)
 		{
-			//printDatabase(currNode);
-			//currNode = currNode->next;
+			currNode = currNode->next;
+			printDatabase(currNode);
 		}
 	}
 	/*
