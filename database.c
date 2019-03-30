@@ -48,8 +48,8 @@ int createDatabase(const char *filename, struct database *firstNode)
 	{
 		if (storage[i] == '\n') {
 			currNode->genres = (char*)malloc(strlen(currString) + 1);
-			strcpy(currNode->genres,currString);
-			//printDatabase(currNode);
+			strncpy(currNode->genres,currString,strlen(currString));
+			printDatabase(currNode);
 			struct database* new = malloc(sizeof(struct database*));
 			currNode->next = new;
 			currNode = currNode->next;
@@ -66,50 +66,51 @@ int createDatabase(const char *filename, struct database *firstNode)
 			if(currentState == 0)
 			{
 				currNode->tconst = (char*)malloc(stringLength + 1);
-				strncpy(currNode->tconst,currString,stringLength-1);
+				strncpy(currNode->tconst,currString,stringLength);
+				printf("%s\n", currNode->tconst);
 			}
 
 			else if(currentState == 1)
 			{
 				currNode->titleType = (char*)malloc(stringLength + 1);
-				strcpy(currNode->titleType,currString);
+				strncpy(currNode->titleType,currString,stringLength);
 			}
 		
 			else if(currentState == 2)
 			{
 				currNode->primaryTitle = (char*)malloc(stringLength + 1);
-				strcpy(currNode->primaryTitle,currString);
+				strncpy(currNode->primaryTitle,currString,stringLength);
 			}
 
 			else if(currentState == 3)
 			{
 				currNode->originalTitle = (char*)malloc(stringLength + 1);
-				strcpy(currNode->originalTitle,currString);
-			printf("%s\n", currNode->tconst);
+				strncpy(currNode->originalTitle,currString,stringLength);
 			}
 
 			else if(currentState == 4)
 			{
+
 				currNode->isAdult = (char*)malloc(stringLength + 1);
-				strcpy(currNode->isAdult,currString);
+				strncpy(currNode->isAdult,currString,stringLength);
 			}
 
 			else if(currentState == 5)
 			{
 				currNode->startYear = (char*)malloc(stringLength + 1);
-				strcpy(currNode->startYear,currString);
+				strncpy(currNode->startYear,currString,stringLength);
 			}
 
 			else if(currentState == 6)
 			{
 				currNode->endYear = (char*)malloc(stringLength + 1);
-				strcpy(currNode->endYear,currString);
+				strncpy(currNode->endYear,currString,stringLength);
 			}
 
 			else if(currentState == 7)
 			{
 				currNode->runtimeMinutes = (char*)malloc(stringLength + 1);
-				strcpy(currNode->runtimeMinutes,currString);
+				strncpy(currNode->runtimeMinutes,currString,stringLength);
 			}
 
 			else
