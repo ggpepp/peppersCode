@@ -129,6 +129,5 @@ int createDatabase(const char *filename, DATABASE *firstNode)
 		}
 		
 	}
-	
 	return lines;
 }

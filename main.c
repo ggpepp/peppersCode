@@ -1,6 +1,6 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include "database.h"
+#include "avlTree.h"
 
 
 int main(){	
@@ -18,13 +18,16 @@ int main(){
 	}
 	else {
 		struct database* currNode = firstNode->next;
-		printDatabase(currNode);
+		AVLTREE* tree = createTree();
+		insertNodeByName(tree, currNode);
 
 		for(int i = 0; i < lines-2; i++)
 		{
 			currNode = currNode->next;
-			printDatabase(currNode);
+			insertNodeByName(tree, currNode);
+			//printf("%d\n", i);
 		}
+		printTree(tree->root);
 	}
 	/*
 	initscr();			Start curses mode 
