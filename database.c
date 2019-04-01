@@ -5,21 +5,48 @@
 
 void printDatabase(DATABASE* currNode)
 {
-	//printf("%s ",currNode->tconst);
-	//printf("%s ",currNode->titleType);
+	printf("%s ",currNode->tconst);
+	printf("%s ",currNode->titleType);
 	printf("%s ",currNode->primaryTitle);
-	//printf("%s ",currNode->originalTitle);
-	//printf("%s ",currNode->isAdult);
+	printf("%s ",currNode->originalTitle);
+	printf("%s ",currNode->isAdult);
 	printf("%s ",currNode->startYear);
-	//printf("%s ",currNode->endYear);
+	printf("%s ",currNode->endYear);
 	printf("%s ",currNode->runtimeMinutes);
 	printf("%s\n",currNode->genres);
 
 }
 
-/*This function builds a singlely linked list of the data that is parsed from the input file.
+DATABASE* createDataNode()
+{
+	DATABASE* node = (DATABASE*)malloc(sizeof(DATABASE));
+	node->tconst = NULL;
+	node->titleType = NULL;
+	node->primaryTitle = NULL;
+	node->originalTitle = NULL;
+	node->isAdult = NULL;
+	node->startYear = NULL;
+	node->endYear = NULL;
+	node->runtimeMinutes = NULL;
+	node->genres = NULL;
+	node->next = NULL;
+	return node;
+}
+void freeDatabaseNode(DATABASE* node)
+{
+	free(node->tconst);
+	free(node->titleType);	
+	free(node->primaryTitle);	
+	free(node->originalTitle);	
+	free(node->isAdult);	
+	free(node->startYear);	
+	free(node->endYear);	
+	free(node->runtimeMinutes);	
+	free(node->genres);
+	free(node);
+}
+//This function builds a singlely linked list of the data that is parsed from the input file.
 
-*/
 int createDatabase(const char *filename, DATABASE *firstNode)
 { 
 	unsigned int size = 0;
@@ -34,7 +61,7 @@ int createDatabase(const char *filename, DATABASE *firstNode)
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
 	fseek(f, 0, SEEK_SET);
-	storage = (char *)malloc(size+1);
+	storage = (char *)malloc(sizeof(char)*(size+1));
 	if (size != fread(storage, sizeof(char), size, f))//Checks to see that the size of the storage array is the same as the size of the file.
 	{ 
 		free(storage);
@@ -52,7 +79,7 @@ int createDatabase(const char *filename, DATABASE *firstNode)
 		{
 			currNode->genres = (char*)malloc(sizeof(char)*(strlen(currString) + 1));
 			strncpy(currNode->genres,currString,strlen(currString));
-			DATABASE* new = malloc(sizeof(DATABASE*));
+			DATABASE* new = createDataNode();
 			currNode->next = new;
 			currNode = currNode->next;
 			currentState = 0;
@@ -79,7 +106,7 @@ int createDatabase(const char *filename, DATABASE *firstNode)
 		
 			else if(currentState == 2)
 			{
-				currNode->primaryTitle = (char*)malloc(sizeof(char)*(stringLength + 1));
+				currNode->primaryTitle = (char*)malloc(sizeof(char)*(stringLength+1));
 				strncpy(currNode->primaryTitle,currString,stringLength);
 			}
 
@@ -91,7 +118,6 @@ int createDatabase(const char *filename, DATABASE *firstNode)
 
 			else if(currentState == 4)
 			{
-
 				currNode->isAdult = (char*)malloc(sizeof(char)*(stringLength + 1));
 				strncpy(currNode->isAdult,currString,stringLength);
 			}

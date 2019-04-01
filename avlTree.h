@@ -19,13 +19,14 @@ struct avlTree {
 	AVLNODE *root;
 };
 
-typedef struct avlTree AVLTREE;
+typedef struct avlTree AVLTREE; 
 
 
 
-void addToList(AVLLIST* head, DATABASE* node);
 AVLTREE *createTree();
-AVLNODE *createNode();
+AVLNODE *createNode(DATABASE* insert, char* key);
+AVLLIST* createList(AVLLIST* head,char* title);
+void printList(AVLLIST* head);
 int nodeHeight(AVLNODE *node);
 int nodeBalance(AVLNODE *node);
 AVLNODE* rotateLL(AVLNODE *node);

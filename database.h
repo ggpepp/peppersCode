@@ -1,3 +1,4 @@
+#include <stdio.h>
 struct database
 {
 	char* tconst;
@@ -14,6 +15,7 @@ struct database
 };
 
 typedef struct database DATABASE;
-
 void printDatabase(DATABASE* firstNode);
+DATABASE* createDataNode();
+void freeDatabaseNode(DATABASE* node);
 int createDatabase(const char *filename, DATABASE* firstNode);

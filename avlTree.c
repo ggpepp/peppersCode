@@ -1,34 +1,10 @@
 #include "avlTree.h"
 #include <stdio.h>
-#include <limits.h>
 #include <string.h>
-#include <assert.h>
 #include <strings.h>
 #include <stdlib.h>
 
-void addToList(AVLLIST* head, DATABASE* node)
-{
-    if(head == NULL)
-    {
-        head = (AVLLIST*)malloc(sizeof(AVLLIST));
-        head->title = malloc((strlen(node->primaryTitle)));
-        strcpy(head->title, node->primaryTitle);
-        head->next = NULL;
-    }
-    else
-    {
-        AVLLIST* currNode = head;
-        while(currNode->next != NULL)
-        {
-            currNode = currNode->next;
-        }
-        currNode->next = (AVLLIST*)malloc(sizeof(AVLLIST*));
-        currNode->next->title = (char*)malloc(sizeof(char)*strlen(node->primaryTitle));
-        strcpy(currNode->next->title, node->primaryTitle);
-        currNode->next->next = NULL;
-    }
-    
-}
+
 AVLTREE* createTree()
 {
     AVLTREE* tree = NULL;
@@ -40,16 +16,39 @@ AVLTREE* createTree()
     return tree;
 
 }
-AVLNODE* createNode()
+AVLNODE* createNode(DATABASE* insert, char* key)
 {
     AVLNODE* node = (AVLNODE*)malloc(sizeof(AVLNODE*));
 
 	node->left = NULL;
 	node->right = NULL;
 	node->list = NULL;
-    node->key = NULL;
+    node->key = (char*)malloc(sizeof(char)*strlen(key));
+    strncpy(node->key, key, strlen(key));
 
 	return node;
+}
+AVLLIST* createList(AVLLIST* head,char* title)
+{
+
+    if((head) && (head->title) && strcasecmp(head->title, title) == 0)
+    {
+        return head;
+    }
+    AVLLIST* newHead = (AVLLIST*)malloc(sizeof(AVLLIST));
+    newHead->title = (char*)malloc(sizeof(char)*(strlen(title)+1));
+    strncpy(newHead->title, title, strlen(title));
+    newHead->next = head;
+    return newHead;
+}
+void printList(AVLLIST* head)
+{
+    AVLLIST* currNode = head;
+    while(currNode != NULL)
+    {
+        printf("%s\n", currNode->title);
+        currNode = currNode->next;
+    }
 }
 int nodeHeight(AVLNODE* node)
 {
@@ -168,50 +167,50 @@ void balanceTree(AVLTREE* tree)
 }
 void insertNode(AVLTREE* tree, DATABASE *newNode, char* key)
 {
-    AVLNODE* node = NULL;
-	AVLNODE* next = NULL;
-	AVLNODE* last = NULL;
+    AVLNODE* treeNode = NULL;
+	AVLNODE* currNode = NULL;
+	AVLNODE* prevNode = NULL;
 
 	//Inserting into an empty list	
 	if( tree->root == NULL ) {
-		node = createNode();
-		addToList(node->list,newNode);
-        node->key = (char*)malloc(strlen(key));
-        strcpy(node->key,key);
-		tree->root = node;
+		treeNode = createNode(newNode, key);
+        treeNode->list = createList(treeNode->list, newNode->primaryTitle);
+		tree->root = treeNode;
 	} 
-	//Inserting into a not empty list
+	//Inserting into a not empty tree
     else {
         
-		next = tree->root;
+		currNode = tree->root;
 
-		while(next != NULL) 
+		while(currNode != NULL) 
         {
-			last = next;
-            //Key is less than the key of current node so move to the left
-			if(strcasecmp(key,next->key) < 0) 
+			prevNode = currNode;
+            //Key is less than the key of currNode node so move to the left
+			if(strcasecmp(key,currNode->key) < 0) 
             {
-				next = next->left;
+				currNode = currNode->left;
 			}
-            //Key is greater than the key of current node so move to the right
-            else if(strcasecmp(key,next->key) > 0) 
+            //Key is greater than the key of currNode node so move to the right
+            else if(strcasecmp(key,currNode->key) > 0) 
             {
-				next = next->right;
+				currNode = currNode->right;
 			} 
-            //Key is equal to the key of current node so add movie to this list
-            else if(strcasecmp(key,next->key) == 0) 
+            //Key is equal to the key of currNode node so add movie to this list
+            else if(strcasecmp(key,currNode->key) == 0) 
             {
-                addToList(next->list, newNode);	
-                next = NULL;
+                currNode->list = createList(currNode->list, newNode->primaryTitle);
+                currNode = NULL;
 			}
 		}
-		node = createNode();
-        node->key = malloc(sizeof(char)*strlen(key));
-		strcpy(node->key,key);
-        addToList(node->list, newNode);
+        if(strcasecmp(key,prevNode->key) != 0)
+        {
+            treeNode = createNode(newNode, key);
+            treeNode->list = createList(treeNode->list, newNode->primaryTitle);
 
-		if(strcasecmp(key,last->key) < 0) last->left = node;
-		if(strcasecmp(key,last->key) > 0) last->right = node;
+            if(strcasecmp(key,prevNode->key) < 0) prevNode->left = treeNode;
+            else prevNode->right = treeNode;
+
+        }
 	}
 
 	balanceTree(tree);
@@ -220,50 +219,59 @@ void insertNodeByName(AVLTREE* tree, DATABASE* node)
 {
     char currString[50];
     int stringIterator = 0;
-    for(int i = 0; i < strlen(node->originalTitle); i++)
+    for(int i = 0; i < strlen(node->primaryTitle); i++)
     {
-        if(node->originalTitle[i] == ' ')
+        if(node->primaryTitle[i] == ' ')
         {
-            if(strlen(currString) > 0)
+            if(strlen(currString) > 1)
             {
                 insertNode(tree, node, currString);
+            }
                 stringIterator = 0;
                 currString[0] = '\0';
-            }
         }
         else
         {
-            currString[stringIterator] = node->originalTitle[i];
+            currString[stringIterator] = node->primaryTitle[i];
             ++stringIterator;
             currString[stringIterator] = '\0';
         }
     }
-    if(strlen(currString) != 0)
+    if(strlen(currString) > 1)
     {
         insertNode(tree, node, currString);
+        stringIterator = 0;
+        currString[0] = '\0';
     }
     
 }
 AVLNODE* search(AVLTREE* tree, char* key)
 {
-    AVLNODE* current = tree->root;
-	while(current && strcasecmp(current->key,key) != 0) 
+    AVLNODE* currNode = tree->root;
+	while(currNode && strcasecmp(currNode->key,key) != 0) 
     {
-		if(strcasecmp(key, current->key) > 0)
+		if(strcasecmp(key, currNode->key) > 0)
         {
-			current = current->right;
+			currNode = currNode->right;
         }
 		else
         {
-            current = current->left;
+            currNode = currNode->left;
         }
+        
 	}
-	return current;
+	return currNode;
 }
-
 void printTree(AVLNODE* head)
 {
-    if(head->left)printTree(head->left);
+    if(head->left)
+    {
+        printTree(head->left);
+    }
+
     printf("%s\n", head->key);
-    if(head->right)printTree(head->right);
+    if(head->right)
+    {
+        printTree(head->right);
+    }
 }
