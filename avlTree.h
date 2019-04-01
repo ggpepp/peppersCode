@@ -1,4 +1,5 @@
 #include "database.h"
+#include <ncurses.h>
 
 struct avlList {
 	char* title;
@@ -26,7 +27,7 @@ typedef struct avlTree AVLTREE;
 AVLTREE *createTree();
 AVLNODE *createNode(DATABASE* insert, char* key);
 AVLLIST* createList(AVLLIST* head,char* title);
-void printList(AVLLIST* head);
+void printList(AVLLIST* head, WINDOW* win);
 int nodeHeight(AVLNODE *node);
 int nodeBalance(AVLNODE *node);
 AVLNODE* rotateLL(AVLNODE *node);

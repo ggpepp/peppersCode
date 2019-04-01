@@ -3,6 +3,7 @@
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
+#include <ncurses.h>
 
 
 AVLTREE* createTree()
@@ -41,13 +42,15 @@ AVLLIST* createList(AVLLIST* head,char* title)
     newHead->next = head;
     return newHead;
 }
-void printList(AVLLIST* head)
+void printList(AVLLIST* head, WINDOW* win)
 {
     AVLLIST* currNode = head;
+    int i =0;
     while(currNode != NULL)
     {
-        printf("%s\n", currNode->title);
+        mvwprintw(win,1+i,1,"%s\n", currNode->title);
         currNode = currNode->next;
+        i++;
     }
 }
 int nodeHeight(AVLNODE* node)
